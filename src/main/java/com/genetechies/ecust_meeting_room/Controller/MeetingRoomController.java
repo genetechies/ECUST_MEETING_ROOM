@@ -16,7 +16,7 @@ public class MeetingRoomController {
     @Autowired
     private MeetingRoomsService meetingRoomsService;
 
-    @RequestMapping(value = "/api/meetingRooms/getRooms",method = RequestMethod.GET)
+    @RequestMapping(value = "/api/meetingRooms/getAllRooms",method = RequestMethod.GET)
     public List<MeetingRoom> getMeetingRooms(){
         return meetingRoomsService.getAllMeetingRooms();
     }
