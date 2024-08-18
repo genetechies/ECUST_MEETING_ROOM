@@ -7,4 +7,5 @@ import java.util.List;
 public interface MeetingRoomsService {
     public List<MeetingRoom> getAllMeetingRooms();
 
+    public void addMeetingRoom(MeetingRoom meetingRoom);
 }

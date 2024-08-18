@@ -18,4 +18,11 @@ public class MeetingRoomsServiceImpl implements MeetingRoomsService {
     public List<MeetingRoom> getAllMeetingRooms() {
         return meetingRoomsDao.getAllMeetingRooms();
     }
+
+    @Override
+    public void addMeetingRoom(MeetingRoom meetingRoom) {
+        meetingRoomsDao.addMeetingRoom(meetingRoom);
+    }
+
+
 }

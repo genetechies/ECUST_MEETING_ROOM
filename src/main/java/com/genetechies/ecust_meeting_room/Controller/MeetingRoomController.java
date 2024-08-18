@@ -3,6 +3,7 @@ package com.genetechies.ecust_meeting_room.Controller;
 import com.genetechies.ecust_meeting_room.Service.MeetingRoomsService;
 import com.genetechies.ecust_meeting_room.pojo.MeetingRoom;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,5 +20,10 @@ public class MeetingRoomController {
     @RequestMapping(value = "/api/meetingRooms/getAllRooms",method = RequestMethod.GET)
     public List<MeetingRoom> getMeetingRooms(){
         return meetingRoomsService.getAllMeetingRooms();
+    }
+
+    @RequestMapping(value = "/api/meetingRooms/addMeetingRoom",method = RequestMethod.POST)
+    public void addMeetingRoom(@RequestBody MeetingRoom meetingRoom){
+        meetingRoomsService.addMeetingRoom(meetingRoom);
     }
 }

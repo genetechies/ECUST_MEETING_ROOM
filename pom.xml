@@ -5,7 +5,7 @@
     <groupId>com.genetechies</groupId>
     <artifactId>ECUST_MEETING_ROOM</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
     <name>ECUST_MEETING_ROOM</name>
     <description>ECUST_MEETING_ROOM</description>
     <properties>
@@ -74,11 +74,9 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>com.genetechies.ecust_meeting_room.EcustMeetingRoomApplication</mainClass>
-                    <skip>true</skip>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>repackage</id>
                         <goals>
                             <goal>repackage</goal>
                         </goals>

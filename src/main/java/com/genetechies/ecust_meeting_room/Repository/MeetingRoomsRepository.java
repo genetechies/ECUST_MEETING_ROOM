@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface MeetingRoomsRepository {
     public List<MeetingRoom> getAllMeetingRooms();
+
+    public void addMeetingRoom(MeetingRoom meetingRoom);
 }
