@@ -8,4 +8,6 @@ public interface MeetingRoomsRepository {
     public List<MeetingRoom> getAllMeetingRooms();
 
     public void addMeetingRoom(MeetingRoom meetingRoom);
+
+    public MeetingRoom getMeetingRoomById(String roomId);
 }

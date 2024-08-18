@@ -24,5 +24,10 @@ public class MeetingRoomsServiceImpl implements MeetingRoomsService {
         meetingRoomsDao.addMeetingRoom(meetingRoom);
     }
 
+    @Override
+    public MeetingRoom getMeetingRoomById(String roomId) {
+       return meetingRoomsDao.getMeetingRoomById(roomId);
+    }
+
 
 }
