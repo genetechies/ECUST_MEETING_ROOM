@@ -1,11 +1,13 @@
-package com.genetechies.ecust_meeting_room.Controller;
+package com.genetechies.ecust_meeting_room.controller;
 
-import com.genetechies.ecust_meeting_room.Service.UserService;
+import com.genetechies.ecust_meeting_room.service.UserService;
 import com.genetechies.ecust_meeting_room.domain.User;
 import com.genetechies.ecust_meeting_room.pojo.ECUSTResponse;
 import com.genetechies.ecust_meeting_room.pojo.LoginResponse;
 import com.genetechies.ecust_meeting_room.utils.JwtUtil;
-import org.apache.log4j.Logger;
+import com.genetechies.ecust_meeting_room.utils.UserUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,7 +24,7 @@ import javax.annotation.Resource;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private static final Logger logger = Logger.getLogger(AuthController.class);
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
     private UserService userService;
@@ -62,6 +64,11 @@ public class AuthController {
         ecustResponse.setData(loginResponse);
         ecustResponse.setMessage("login successfully");
         return ecustResponse;
+    }
+
+    @RequestMapping(value = "currentUser",method = RequestMethod.GET)
+    public User getCurrentUser(){
+        return UserUtils.getCurrentUser();
     }
 }
 

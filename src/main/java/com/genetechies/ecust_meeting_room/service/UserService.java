@@ -1,4 +1,4 @@
-package com.genetechies.ecust_meeting_room.Service;
+package com.genetechies.ecust_meeting_room.service;
 
 import com.genetechies.ecust_meeting_room.domain.User;
 

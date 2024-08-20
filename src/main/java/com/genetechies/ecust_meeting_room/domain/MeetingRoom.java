@@ -42,7 +42,7 @@ public class MeetingRoom implements Serializable {
     /**
      * 
      */
-    private String status;
+    private Object status;
 
     /**
      * 
@@ -132,7 +132,7 @@ public class MeetingRoom implements Serializable {
     /**
      * 
      */
-    public void setStatus(String status) {
+    public void setStatus(Object status) {
         this.status = status;
     }
 
