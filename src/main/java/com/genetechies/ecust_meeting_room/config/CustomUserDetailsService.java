@@ -1,6 +1,5 @@
 package com.genetechies.ecust_meeting_room.config;
 
-import com.genetechies.ecust_meeting_room.service.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

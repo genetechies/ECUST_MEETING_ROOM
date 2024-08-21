@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -12,7 +14,8 @@ import java.util.Date;
  * @TableName reservation
  */
 @TableName(value ="reservation")
-public class Reservation implements Serializable {
+public class
+Reservation implements Serializable {
     /**
      * 
      */
@@ -34,14 +37,10 @@ public class Reservation implements Serializable {
      */
     private String subject;
 
-    /**
-     * 
-     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startTime;
 
-    /**
-     * 
-     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
 
     /**

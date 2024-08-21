@@ -1,9 +1,9 @@
 package com.genetechies.ecust_meeting_room.controller;
 
-import com.genetechies.ecust_meeting_room.service.UserService;
 import com.genetechies.ecust_meeting_room.domain.User;
 import com.genetechies.ecust_meeting_room.pojo.ECUSTResponse;
 import com.genetechies.ecust_meeting_room.pojo.LoginResponse;
+import com.genetechies.ecust_meeting_room.service.UserService;
 import com.genetechies.ecust_meeting_room.utils.JwtUtil;
 import com.genetechies.ecust_meeting_room.utils.UserUtils;
 import org.slf4j.Logger;

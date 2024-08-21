@@ -3,6 +3,7 @@ package com.genetechies.ecust_meeting_room.controller;
 import com.genetechies.ecust_meeting_room.domain.MeetingRoom;
 import com.genetechies.ecust_meeting_room.pojo.ECUSTException;
 import com.genetechies.ecust_meeting_room.pojo.ECUSTResponse;
+import com.genetechies.ecust_meeting_room.service.MeetingRoomService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class MeetingRoomController {
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
-    private com.genetechies.ecust_meeting_room.service.MeetingRoomService meetingRoomService;
+    private MeetingRoomService meetingRoomService;
 
     @RequestMapping(value = "getAllMeetingRooms",method = RequestMethod.GET)
     public ECUSTResponse<List<MeetingRoom>> getAllMeetingRooms(){
@@ -62,4 +63,33 @@ public class MeetingRoomController {
         }
         return ecustResponse;
     }
+
+    @RequestMapping(value = "removeMeetingRoomById",method = RequestMethod.POST)
+    public ECUSTResponse<Void> removeMeetingRoomById(@RequestParam(value = "roomId")String roomId){
+        logger.info("call:/api/meetingRooms/removeMeetingRoomById");
+        ECUSTResponse<Void> ecustResponse = new ECUSTResponse<>();
+        try{
+            meetingRoomService.removeById(roomId);
+            ecustResponse.setCode(ECUSTResponse.OK);
+        }catch(Exception e) {
+            logger.error(e.getMessage(),e);
+            throw ECUSTException.instance(e.getMessage(),e);
+        }
+        return ecustResponse;
+    }
+
+    @RequestMapping(value = "updateMeetingRoomById",method = RequestMethod.POST)
+    public ECUSTResponse<Void> updateMeetingRoom(@RequestBody MeetingRoom meetingRoom){
+        logger.info("call:/api/meetingRooms/updateMeetingRoom");
+        ECUSTResponse<Void> ecustResponse = new ECUSTResponse<>();
+        try{
+            meetingRoomService.updateById(meetingRoom);
+            ecustResponse.setCode(ECUSTResponse.OK);
+        }catch(Exception e) {
+            logger.error(e.getMessage(),e);
+            throw ECUSTException.instance(e.getMessage(),e);
+        }
+        return ecustResponse;
+    }
+
 }

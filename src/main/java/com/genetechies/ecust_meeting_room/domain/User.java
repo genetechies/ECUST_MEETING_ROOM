@@ -12,77 +12,38 @@ import java.util.Collection;
 import java.util.Date;
 
 /**
- * 
  * @TableName user
  */
 @TableName(value ="user")
 public class User implements Serializable, UserDetails {
-    /**
-     * 
-     */
-    @TableId(type = IdType.AUTO)
     private Integer userId;
 
-    /**
-     * 
-     */
     private String username;
 
-    /**
-     * 
-     */
     private String password;
 
-    /**
-     * 
-     */
     private String name;
 
-    /**
-     * 
-     */
     private String employeeId;
 
-    /**
-     * 
-     */
     private String phone;
 
-    /**
-     * 
-     */
     private Object role;
 
-    /**
-     * 
-     */
     private Object status;
 
-    /**
-     * 
-     */
     private Date createdAt;
 
-    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 
-     */
     public Integer getUserId() {
         return userId;
     }
 
-    /**
-     * 
-     */
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
-    /**
-     * 
-     */
     public String getUsername() {
         return username;
     }
@@ -107,9 +68,6 @@ public class User implements Serializable, UserDetails {
         return true;
     }
 
-    /**
-     * 
-     */
     public void setUsername(String username) {
         this.username = username;
     }
@@ -119,100 +77,58 @@ public class User implements Serializable, UserDetails {
         return null;
     }
 
-    /**
-     * 
-     */
     public String getPassword() {
         return password;
     }
 
-    /**
-     * 
-     */
     public void setPassword(String password) {
         this.password = password;
     }
 
-    /**
-     * 
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * 
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * 
-     */
     public String getEmployeeId() {
         return employeeId;
     }
 
-    /**
-     * 
-     */
     public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
     }
 
-    /**
-     * 
-     */
     public String getPhone() {
         return phone;
     }
 
-    /**
-     * 
-     */
     public void setPhone(String phone) {
         this.phone = phone;
     }
 
-    /**
-     * 
-     */
     public Object getRole() {
         return role;
     }
 
-    /**
-     * 
-     */
     public void setRole(Object role) {
         this.role = role;
     }
 
-    /**
-     * 
-     */
     public Object getStatus() {
         return status;
     }
 
-    /**
-     * 
-     */
     public void setStatus(Object status) {
         this.status = status;
     }
 
-    /**
-     * 
-     */
     public Date getCreatedAt() {
         return createdAt;
     }
 
-    /**
-     * 
-     */
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }

@@ -8,87 +8,48 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 
  * @TableName notification
  */
 @TableName(value ="notification")
 public class Notification implements Serializable {
-    /**
-     * 
-     */
-    @TableId(type = IdType.AUTO)
     private Integer notificationId;
 
-    /**
-     * 
-     */
     private Integer userId;
 
-    /**
-     * 
-     */
     private String message;
 
-    /**
-     * 
-     */
     private Date sentAt;
 
-    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 
-     */
     public Integer getNotificationId() {
         return notificationId;
     }
 
-    /**
-     * 
-     */
     public void setNotificationId(Integer notificationId) {
         this.notificationId = notificationId;
     }
 
-    /**
-     * 
-     */
     public Integer getUserId() {
         return userId;
     }
 
-    /**
-     * 
-     */
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
-    /**
-     * 
-     */
     public String getMessage() {
         return message;
     }
 
-    /**
-     * 
-     */
     public void setMessage(String message) {
         this.message = message;
     }
 
-    /**
-     * 
-     */
     public Date getSentAt() {
         return sentAt;
     }
 
-    /**
-     * 
-     */
     public void setSentAt(Date sentAt) {
         this.sentAt = sentAt;
     }
