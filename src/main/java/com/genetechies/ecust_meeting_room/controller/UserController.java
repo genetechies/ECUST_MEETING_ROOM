@@ -1,11 +1,9 @@
 package com.genetechies.ecust_meeting_room.controller;
 
-import com.genetechies.ecust_meeting_room.domain.MeetingRoom;
 import com.genetechies.ecust_meeting_room.domain.User;
 import com.genetechies.ecust_meeting_room.pojo.ECUSTException;
 import com.genetechies.ecust_meeting_room.pojo.ECUSTResponse;
 import com.genetechies.ecust_meeting_room.service.UserService;
-import com.genetechies.ecust_meeting_room.utils.UserUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

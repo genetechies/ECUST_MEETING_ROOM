@@ -43,6 +43,7 @@ public class ReservationsController {
             QueryWrapper<Reservation> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("user_id",userId);
             List<Reservation> reservations = reservationsService.list(queryWrapper);
+            ecustResponse.setData(reservations);
             ecustResponse.setCode(ECUSTResponse.OK);
         }catch(Exception e) {
             logger.error(e.getMessage(),e);

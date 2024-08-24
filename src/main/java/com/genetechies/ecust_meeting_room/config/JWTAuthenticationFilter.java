@@ -1,6 +1,5 @@
 package com.genetechies.ecust_meeting_room.config;
 
-import com.genetechies.ecust_meeting_room.domain.User;
 import com.genetechies.ecust_meeting_room.utils.JwtUtil;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -1,9 +1,16 @@
 package com.genetechies.ecust_meeting_room.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.genetechies.ecust_meeting_room.domain.MeetingRoom;
+import com.genetechies.ecust_meeting_room.domain.Reservation;
 import com.genetechies.ecust_meeting_room.pojo.ECUSTException;
 import com.genetechies.ecust_meeting_room.pojo.ECUSTResponse;
+import com.genetechies.ecust_meeting_room.pojo.MeetingRoomSearchVo;
 import com.genetechies.ecust_meeting_room.service.MeetingRoomService;
+import com.genetechies.ecust_meeting_room.service.ReservationService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +26,42 @@ public class MeetingRoomController {
 
     @Autowired
     private MeetingRoomService meetingRoomService;
+
+    @Autowired
+    private ReservationService reservationService;
+
+
+
+    @ApiOperation(value = "get meeting room by date range", notes = "parma:{\"startTime\":\"2024-08-18 16:40:00\",\"endTime\":\"2024-08-18 17:43:00\"}")
+    @RequestMapping(value = "getMeetingRoomsByDateRange",method = RequestMethod.GET)
+    public ECUSTResponse<List<MeetingRoom>> getMeetingRoomsByDateRange(
+            @RequestBody MeetingRoomSearchVo meetingRoomSearchVo){
+        logger.info("call:/api/meetingRooms/getMeetingRoomsByDateRange{}",meetingRoomSearchVo);
+        ECUSTResponse<List<MeetingRoom>> ecustResponse = new ECUSTResponse<>();
+        try{
+            List<MeetingRoom> meetingRooms = getMeetingRoombyDateRage(meetingRoomSearchVo);
+            ecustResponse.setData(meetingRooms);
+            ecustResponse.setCode(ECUSTResponse.OK);
+        }catch(Exception e) {
+            logger.error(e.getMessage(),e);
+            throw ECUSTException.instance(e.getMessage(),e);
+        }
+        return ecustResponse;
+    }
+
+
+    private List<MeetingRoom> getMeetingRoombyDateRage(MeetingRoomSearchVo meetingRoomSearchVo){
+        List<MeetingRoom> meetingRooms = meetingRoomService.list();
+
+        QueryWrapper<Reservation> reservationQueryWrapper = new QueryWrapper<>();
+        reservationQueryWrapper.and(r -> r.lt("start_time",meetingRoomSearchVo.getStartTime()).gt("end_time",meetingRoomSearchVo.getStartTime()))
+                .or(r -> r.lt("start_time",meetingRoomSearchVo.getEndTime()).gt("end_time",meetingRoomSearchVo.getEndTime()));
+
+        List<Integer> RoomIds = reservationService.list(reservationQueryWrapper).stream().map(Reservation::getRoomId).toList();
+
+        return meetingRooms.stream().filter(meetingRoom -> !RoomIds.contains(meetingRoom.getRoomId())).toList();
+
+    }
 
     @RequestMapping(value = "getAllMeetingRooms",method = RequestMethod.GET)
     public ECUSTResponse<List<MeetingRoom>> getAllMeetingRooms(){

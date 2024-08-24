@@ -1,8 +1,5 @@
 package com.genetechies.ecust_meeting_room.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +12,7 @@ import java.util.Date;
  * @TableName user
  */
 @TableName(value ="user")
-public class User implements Serializable, UserDetails {
+public class User implements Serializable , UserDetails {
     private Integer userId;
 
     private String username;
