@@ -1,19 +1,17 @@
 package com.genetechies.ecust_meeting_room.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.genetechies.ecust_meeting_room.domain.MeetingRoom;
-import com.genetechies.ecust_meeting_room.domain.Reservation;
-import com.genetechies.ecust_meeting_room.pojo.ECUSTException;
-import com.genetechies.ecust_meeting_room.pojo.ECUSTResponse;
-import com.genetechies.ecust_meeting_room.pojo.MeetingRoomSearchVo;
+import com.genetechies.ecust_meeting_room.pojo.*;
 import com.genetechies.ecust_meeting_room.service.MeetingRoomService;
-import com.genetechies.ecust_meeting_room.service.ReservationService;
-import io.swagger.annotations.Api;
+import com.genetechies.ecust_meeting_room.service.impl.MeetingRoomReservationServiceImpl;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,22 +23,23 @@ public class MeetingRoomController {
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
+    @Qualifier("meetingRoomServiceImpl")
     private MeetingRoomService meetingRoomService;
 
     @Autowired
-    private ReservationService reservationService;
+    @Qualifier("meetingRoomReservationServiceImpl")
+    private MeetingRoomReservationServiceImpl meetingRoomReservationService;
 
-
-
-    @ApiOperation(value = "get meeting room by date range", notes = "parma:{\"startTime\":\"2024-08-18 16:40:00\",\"endTime\":\"2024-08-18 17:43:00\"}")
-    @RequestMapping(value = "getMeetingRoomsByDateRange",method = RequestMethod.GET)
-    public ECUSTResponse<List<MeetingRoom>> getMeetingRoomsByDateRange(
-            @RequestBody MeetingRoomSearchVo meetingRoomSearchVo){
-        logger.info("call:/api/meetingRooms/getMeetingRoomsByDateRange{}",meetingRoomSearchVo);
-        ECUSTResponse<List<MeetingRoom>> ecustResponse = new ECUSTResponse<>();
+    @ApiOperation(value = "get all meeting room with page",notes = "param: {\"pageSize\":2,\"pageNo\":1}")
+    @RequestMapping(value = "getAllMeetingRooms",method = RequestMethod.POST)
+    public ECUSTResponse<PageResponse<MeetingRoom>> getAllMeetingRooms(@RequestBody PageQuery pageQuery){
+        logger.info("call:/api/meetingRooms/getAllMeetingRooms");
+        ECUSTResponse<PageResponse<MeetingRoom>> ecustResponse = new ECUSTResponse<>();
         try{
-            List<MeetingRoom> meetingRooms = getMeetingRoombyDateRage(meetingRoomSearchVo);
-            ecustResponse.setData(meetingRooms);
+            IPage<MeetingRoom> page = new Page<>(pageQuery.getPageNo(), pageQuery.getPageSize());
+
+            IPage<MeetingRoom> meetingRoomIPage = meetingRoomService.page(page);
+            ecustResponse.setData(new PageResponse<>(meetingRoomIPage.getTotal(),meetingRoomIPage.getPages(),meetingRoomIPage.getSize(),meetingRoomIPage.getCurrent(),meetingRoomIPage.getRecords()));
             ecustResponse.setCode(ECUSTResponse.OK);
         }catch(Exception e) {
             logger.error(e.getMessage(),e);
@@ -50,26 +49,20 @@ public class MeetingRoomController {
     }
 
 
-    private List<MeetingRoom> getMeetingRoombyDateRage(MeetingRoomSearchVo meetingRoomSearchVo){
-        List<MeetingRoom> meetingRooms = meetingRoomService.list();
-
-        QueryWrapper<Reservation> reservationQueryWrapper = new QueryWrapper<>();
-        reservationQueryWrapper.and(r -> r.lt("start_time",meetingRoomSearchVo.getStartTime()).gt("end_time",meetingRoomSearchVo.getStartTime()))
-                .or(r -> r.lt("start_time",meetingRoomSearchVo.getEndTime()).gt("end_time",meetingRoomSearchVo.getEndTime()));
-
-        List<Integer> RoomIds = reservationService.list(reservationQueryWrapper).stream().map(Reservation::getRoomId).toList();
-
-        return meetingRooms.stream().filter(meetingRoom -> !RoomIds.contains(meetingRoom.getRoomId())).toList();
-
-    }
-
-    @RequestMapping(value = "getAllMeetingRooms",method = RequestMethod.GET)
-    public ECUSTResponse<List<MeetingRoom>> getAllMeetingRooms(){
-        logger.info("call:/api/meetingRooms/getAllRooms");
-        ECUSTResponse<List<MeetingRoom>> ecustResponse = new ECUSTResponse<>();
+    @RequestMapping(value = "getMeetingRoomsByName",method = RequestMethod.POST)
+    public ECUSTResponse<PageResponse<MeetingRoom>> getMeetingRoomsByName(
+            @RequestBody MeetingRoomNameVo meetingRoomNameVo){
+        logger.info("call:/api/meetingRooms/getMeetingRoomsByName");
+        ECUSTResponse<PageResponse<MeetingRoom>> ecustResponse = new ECUSTResponse<>();
         try{
-            List<MeetingRoom> meetingRooms = meetingRoomService.list();
-            ecustResponse.setData(meetingRooms);
+            IPage<MeetingRoom> page = new Page<>(meetingRoomNameVo.getPageNo(), meetingRoomNameVo.getPageSize());
+            QueryWrapper<MeetingRoom> queryWrapper = new QueryWrapper<>();
+            queryWrapper.like("name",meetingRoomNameVo.getMeetingRoomName());
+
+
+            IPage<MeetingRoom> meetingRoomIPage = meetingRoomReservationService.page(page,queryWrapper);
+
+            ecustResponse.setData(new PageResponse<>(meetingRoomIPage.getTotal(),meetingRoomIPage.getPages(),meetingRoomIPage.getSize(),meetingRoomIPage.getCurrent(),meetingRoomIPage.getRecords()));
             ecustResponse.setCode(ECUSTResponse.OK);
         }catch(Exception e) {
             logger.error(e.getMessage(),e);
@@ -77,6 +70,26 @@ public class MeetingRoomController {
         }
         return ecustResponse;
     }
+
+    @ApiOperation(value = "get meeting room by Name", notes = "parma: {\"pageSize\":2,\"pageNo\":1,\"startTime\":\"2024-08-18 16:40:00\",\"endTime\":\"2024-08-18 17:43:00\"}")
+    @RequestMapping(value = "getMeetingRoomsByDateRangeAndRoomId",method = RequestMethod.POST)
+    public ECUSTResponse<PageResponse<MeetingRoom>> getMeetingRoomsByDateRange(
+            @RequestBody MeetingRoomDateVo meetingRoomDateVo){
+        logger.info("call:/api/meetingRooms/getMeetingRoomsByDateRangeAndRoomId{}",meetingRoomDateVo);
+        ECUSTResponse<PageResponse<MeetingRoom>> ecustResponse = new ECUSTResponse<>();
+        try{
+            IPage<MeetingRoom> meetingRoomIPage = meetingRoomReservationService.selectReserveMeetingRoom(meetingRoomDateVo);
+            ecustResponse.setData(new PageResponse<>(meetingRoomIPage.getTotal(),meetingRoomIPage.getPages(),meetingRoomIPage.getSize(),meetingRoomIPage.getCurrent(),meetingRoomIPage.getRecords()));
+            ecustResponse.setCode(ECUSTResponse.OK);
+        }catch(Exception e) {
+            logger.error(e.getMessage(),e);
+            throw ECUSTException.instance(e.getMessage(),e);
+        }
+        return ecustResponse;
+    }
+
+
+
 
     @RequestMapping(value = "getMeetingroomById",method = RequestMethod.GET)
     public ECUSTResponse<MeetingRoom> getMeetingRoomById(@RequestParam(value = "roomId") String roomId){

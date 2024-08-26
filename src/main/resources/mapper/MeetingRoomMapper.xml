@@ -19,4 +19,9 @@
         equipment,address,status,
         created_at
     </sql>
+    <select id="selectMeetingRoomPage" resultType="com.genetechies.ecust_meeting_room.domain.MeetingRoom">
+        select
+        <include refid="Base_Column_List"/>
+        from meeting_room
+    </select>
 </mapper>

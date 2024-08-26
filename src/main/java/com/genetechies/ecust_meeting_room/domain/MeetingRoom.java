@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 
@@ -39,6 +40,8 @@ public class MeetingRoom implements Serializable {
      */
     private String address;
 
+
+    private List<Reservation> reservationList;
     /**
      * 
      */
@@ -148,6 +151,14 @@ public class MeetingRoom implements Serializable {
      */
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public List<Reservation> getReservationList() {
+        return reservationList;
+    }
+
+    public void setReservationList(List<Reservation> reservationList) {
+        this.reservationList = reservationList;
     }
 
     @Override

@@ -2,11 +2,11 @@ package com.genetechies.ecust_meeting_room.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
-public class MeetingRoomSearchVo {
+public class MeetingRoomDateVo extends PageQuery{
+
+    private Integer roomId;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     LocalDateTime startTime;
@@ -28,6 +28,15 @@ public class MeetingRoomSearchVo {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+
+    public Integer getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(Integer roomId) {
+        this.roomId = roomId;
     }
 
     @Override
