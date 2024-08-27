@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.genetechies.ecust_meeting_room.mapper.MeetingRoomReservationMapper">
 
-    <resultMap id="BaseResultMap" type="com.genetechies.ecust_meeting_room.domain.MeetingRoom">
+    <resultMap id="MeetingRoomReservation" type="com.genetechies.ecust_meeting_room.domain.MeetingRoom">
             <id property="roomId" column="room_id" jdbcType="INTEGER"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
             <result property="capacity" column="capacity" jdbcType="INTEGER"/>
@@ -25,14 +25,43 @@
             </collection>
     </resultMap>
 
+
+    <resultMap id="ReservationMeetingRoom" type="com.genetechies.ecust_meeting_room.domain.Reservation">
+        <id property="reservationId" column="reservation_id" jdbcType="INTEGER"/>
+        <result property="roomId" column="room_id" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="subject" column="subject" jdbcType="VARCHAR"/>
+        <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
+        <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
+        <result property="attendees" column="attendees" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="OTHER"/>
+        <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+        <association property="meetingRoom">
+            <id property="roomId" column="room_id" jdbcType="INTEGER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="capacity" column="capacity" jdbcType="INTEGER"/>
+            <result property="equipment" column="equipment" jdbcType="VARCHAR"/>
+            <result property="address" column="address" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="OTHER"/>
+            <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+        </association>
+    </resultMap>
+
     <sql id="Base_Column_List">
         m.*,r.*
     </sql>
-    <select id="selectReserveMeetingRoom" resultMap="BaseResultMap">
+    <select id="selectReserveMeetingRoom" resultMap="MeetingRoomReservation">
         select
         <include refid="Base_Column_List"/>
         from meeting_room m left JOIN reservation r ON m.room_id=r.room_id
         where m.room_id = #{roomId} and #{startTime} &lt; r.start_time and r.end_time &lt; #{endTime}
+    </select>
+
+    <select id="selectReserveMeetingRoomByAdminId" resultMap="ReservationMeetingRoom">
+        select
+        <include refid="Base_Column_List"/>
+        FROM room_admin a LEFT JOIN meeting_room m ON a.room_id=m.room_id
+        left JOIN reservation r ON m.room_id=r.room_id WHERE a.admin_id=#{adminId}
     </select>
 </mapper>
 

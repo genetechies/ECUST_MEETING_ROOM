@@ -3,7 +3,9 @@ package com.genetechies.ecust_meeting_room.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.genetechies.ecust_meeting_room.domain.MeetingRoom;
+import com.genetechies.ecust_meeting_room.domain.Reservation;
 import com.genetechies.ecust_meeting_room.pojo.MeetingRoomDateVo;
+import com.genetechies.ecust_meeting_room.pojo.ReservationAdminIdVo;
 
 /**
 * @author 98025
@@ -13,5 +15,7 @@ import com.genetechies.ecust_meeting_room.pojo.MeetingRoomDateVo;
 public interface MeetingRoomReservationService extends IService<MeetingRoom> {
 
     IPage<MeetingRoom> selectReserveMeetingRoom(MeetingRoomDateVo meetingRoomSearchVo);
+
+    IPage<Reservation> selectReserveMeetingRoomByAdminId(ReservationAdminIdVo reservationAdminIdVo);
 
 }

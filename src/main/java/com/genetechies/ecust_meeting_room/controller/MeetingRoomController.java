@@ -27,7 +27,6 @@ public class MeetingRoomController {
     private MeetingRoomService meetingRoomService;
 
     @Autowired
-    @Qualifier("meetingRoomReservationServiceImpl")
     private MeetingRoomReservationServiceImpl meetingRoomReservationService;
 
     @ApiOperation(value = "get all meeting room with page",notes = "param: {\"pageSize\":2,\"pageNo\":1}")
@@ -49,6 +48,7 @@ public class MeetingRoomController {
     }
 
 
+    @ApiOperation(value = "get  meeting room by name",notes = "param: {\"pageSize\":10,\"pageNo\":1,\"meetingRoomName\":\"201\"}")
     @RequestMapping(value = "getMeetingRoomsByName",method = RequestMethod.POST)
     public ECUSTResponse<PageResponse<MeetingRoom>> getMeetingRoomsByName(
             @RequestBody MeetingRoomNameVo meetingRoomNameVo){
@@ -58,8 +58,6 @@ public class MeetingRoomController {
             IPage<MeetingRoom> page = new Page<>(meetingRoomNameVo.getPageNo(), meetingRoomNameVo.getPageSize());
             QueryWrapper<MeetingRoom> queryWrapper = new QueryWrapper<>();
             queryWrapper.like("name",meetingRoomNameVo.getMeetingRoomName());
-
-
             IPage<MeetingRoom> meetingRoomIPage = meetingRoomReservationService.page(page,queryWrapper);
 
             ecustResponse.setData(new PageResponse<>(meetingRoomIPage.getTotal(),meetingRoomIPage.getPages(),meetingRoomIPage.getSize(),meetingRoomIPage.getCurrent(),meetingRoomIPage.getRecords()));
@@ -71,7 +69,7 @@ public class MeetingRoomController {
         return ecustResponse;
     }
 
-    @ApiOperation(value = "get meeting room by Name", notes = "parma: {\"pageSize\":2,\"pageNo\":1,\"startTime\":\"2024-08-18 16:40:00\",\"endTime\":\"2024-08-18 17:43:00\"}")
+    @ApiOperation(value = "get meeting room by date range and roomID", notes = "parma: {\"pageSize\":2,\"pageNo\":1,\"roomId\":1,\"startTime\":\"2024-08-17 16:40:00\",\"endTime\":\"2024-08-19 17:43:00\"}")
     @RequestMapping(value = "getMeetingRoomsByDateRangeAndRoomId",method = RequestMethod.POST)
     public ECUSTResponse<PageResponse<MeetingRoom>> getMeetingRoomsByDateRange(
             @RequestBody MeetingRoomDateVo meetingRoomDateVo){

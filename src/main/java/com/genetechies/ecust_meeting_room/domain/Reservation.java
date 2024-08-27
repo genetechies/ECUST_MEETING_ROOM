@@ -14,8 +14,7 @@ import java.util.Date;
  * @TableName reservation
  */
 @TableName(value ="reservation")
-public class
-Reservation implements Serializable {
+public class Reservation implements Serializable {
     /**
      * 
      */
@@ -47,6 +46,9 @@ Reservation implements Serializable {
      * 
      */
     private Integer attendees;
+
+    @TableField(exist = false)
+    private MeetingRoom meetingRoom;
 
     /**
      * 
@@ -178,6 +180,15 @@ Reservation implements Serializable {
      */
     public Date getCreatedAt() {
         return createdAt;
+    }
+
+
+    public MeetingRoom getMeetingRoom() {
+        return meetingRoom;
+    }
+
+    public void setMeetingRoom(MeetingRoom meetingRoom) {
+        this.meetingRoom = meetingRoom;
     }
 
     /**

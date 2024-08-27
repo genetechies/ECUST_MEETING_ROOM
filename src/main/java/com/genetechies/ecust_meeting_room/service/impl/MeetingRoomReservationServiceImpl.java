@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.genetechies.ecust_meeting_room.domain.MeetingRoom;
+import com.genetechies.ecust_meeting_room.domain.Reservation;
 import com.genetechies.ecust_meeting_room.mapper.MeetingRoomMapper;
 import com.genetechies.ecust_meeting_room.mapper.MeetingRoomReservationMapper;
 import com.genetechies.ecust_meeting_room.pojo.MeetingRoomDateVo;
+import com.genetechies.ecust_meeting_room.pojo.ReservationAdminIdVo;
 import com.genetechies.ecust_meeting_room.service.MeetingRoomReservationService;
 import org.springframework.stereotype.Service;
 
@@ -28,10 +30,16 @@ public class MeetingRoomReservationServiceImpl extends ServiceImpl<MeetingRoomRe
     private MeetingRoomReservationMapper meetingRoomReservationMapper;
 
     @Override
-    public IPage<MeetingRoom> selectReserveMeetingRoom(MeetingRoomDateVo meetingRoomSearchVo) {
-        IPage<MeetingRoom> page = new Page<>(meetingRoomSearchVo.getPageNo(), meetingRoomSearchVo.getPageSize());
-        return meetingRoomReservationMapper.selectReserveMeetingRoom(page,meetingRoomSearchVo.getRoomId(),meetingRoomSearchVo.getStartTime(),meetingRoomSearchVo.getEndTime());
+    public IPage<MeetingRoom> selectReserveMeetingRoom(MeetingRoomDateVo meetingRoomDateVo) {
+        IPage<MeetingRoom> page = new Page<>(meetingRoomDateVo.getPageNo(), meetingRoomDateVo.getPageSize());
+        return meetingRoomReservationMapper.selectReserveMeetingRoom(page,meetingRoomDateVo.getRoomId(),meetingRoomDateVo.getStartTime(),meetingRoomDateVo.getEndTime());
 
+    }
+
+    @Override
+    public IPage<Reservation> selectReserveMeetingRoomByAdminId(ReservationAdminIdVo reservationAdminIdVo) {
+        IPage<Reservation> page = new Page<>(reservationAdminIdVo.getPageNo(),reservationAdminIdVo.getPageSize());
+        return meetingRoomReservationMapper.selectReserveMeetingRoomByAdminId(page,reservationAdminIdVo.getAdminId());
     }
 }
 

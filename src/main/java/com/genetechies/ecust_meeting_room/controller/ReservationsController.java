@@ -2,16 +2,21 @@ package com.genetechies.ecust_meeting_room.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.Query;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.genetechies.ecust_meeting_room.domain.MeetingRoom;
 import com.genetechies.ecust_meeting_room.domain.Notification;
 import com.genetechies.ecust_meeting_room.domain.Reservation;
 import com.genetechies.ecust_meeting_room.domain.RoomAdmin;
 import com.genetechies.ecust_meeting_room.pojo.ECUSTException;
 import com.genetechies.ecust_meeting_room.pojo.ECUSTResponse;
+import com.genetechies.ecust_meeting_room.pojo.PageResponse;
+import com.genetechies.ecust_meeting_room.pojo.ReservationAdminIdVo;
 import com.genetechies.ecust_meeting_room.service.MeetingRoomService;
 import com.genetechies.ecust_meeting_room.service.NotificationService;
 import com.genetechies.ecust_meeting_room.service.ReservationService;
 import com.genetechies.ecust_meeting_room.service.RoomAdminService;
+import com.genetechies.ecust_meeting_room.service.impl.MeetingRoomReservationServiceImpl;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +38,9 @@ public class ReservationsController {
     private RoomAdminService roomAdminService;
 
     @Autowired
+    private MeetingRoomReservationServiceImpl meetingRoomReservationService;
+
+    @Autowired
     private NotificationService notificationService;
 
     @RequestMapping(value = "getReservationsByUserId",method = RequestMethod.GET)
@@ -44,6 +52,23 @@ public class ReservationsController {
             queryWrapper.eq("user_id",userId);
             List<Reservation> reservations = reservationsService.list(queryWrapper);
             ecustResponse.setData(reservations);
+            ecustResponse.setCode(ECUSTResponse.OK);
+        }catch(Exception e) {
+            logger.error(e.getMessage(),e);
+            throw ECUSTException.instance(e.getMessage(),e);
+        }
+        return ecustResponse;
+    }
+
+
+    @ApiOperation(value = "get reservation info by admin id",notes = "param: {\"pageSize\":2,\"pageNo\":1}")
+    @RequestMapping(value = "getReservationsByAdminId",method = RequestMethod.POST)
+    public ECUSTResponse<PageResponse<Reservation>> getReservationsByAdminId(@RequestBody ReservationAdminIdVo reservationAdminIdVo){
+        logger.info("call:/api/reservation/getReservationsByAdminId");
+        ECUSTResponse<PageResponse<Reservation>> ecustResponse = new ECUSTResponse<>();
+        try{
+            IPage<Reservation>  reservationIPage= meetingRoomReservationService.selectReserveMeetingRoomByAdminId(reservationAdminIdVo);
+            ecustResponse.setData(new PageResponse<>(reservationIPage.getTotal(),reservationIPage.getPages(),reservationIPage.getSize(),reservationIPage.getCurrent(),reservationIPage.getRecords()));
             ecustResponse.setCode(ECUSTResponse.OK);
         }catch(Exception e) {
             logger.error(e.getMessage(),e);

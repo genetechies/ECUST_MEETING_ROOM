@@ -23,7 +23,7 @@ public class MappTest {
         IPage<MeetingRoom> page = new Page<>(1, 2);
         LocalDateTime startTime = LocalDateTime.of(2024,8,18,16,40);
         LocalDateTime endTime = LocalDateTime.of(2024,8,18,17,43);
-        IPage<MeetingRoom> meetingRoomList = meetingRoomReservationMapper.selectReserveMeetingRoom(page,startTime,endTime);
+        IPage<MeetingRoom> meetingRoomList = meetingRoomReservationMapper.selectReserveMeetingRoom(page,1,startTime,endTime);
         System.out.println(meetingRoomList.getRecords());
     }
 }

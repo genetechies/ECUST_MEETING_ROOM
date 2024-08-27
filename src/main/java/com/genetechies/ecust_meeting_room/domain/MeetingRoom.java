@@ -41,6 +41,7 @@ public class MeetingRoom implements Serializable {
     private String address;
 
 
+    @TableField(exist = false)
     private List<Reservation> reservationList;
     /**
      * 
