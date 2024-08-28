@@ -2,15 +2,13 @@ package com.genetechies.ecust_meeting_room.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.Query;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.genetechies.ecust_meeting_room.domain.MeetingRoom;
 import com.genetechies.ecust_meeting_room.domain.Notification;
 import com.genetechies.ecust_meeting_room.domain.Reservation;
 import com.genetechies.ecust_meeting_room.domain.RoomAdmin;
-import com.genetechies.ecust_meeting_room.pojo.ECUSTException;
-import com.genetechies.ecust_meeting_room.pojo.ECUSTResponse;
-import com.genetechies.ecust_meeting_room.pojo.PageResponse;
-import com.genetechies.ecust_meeting_room.pojo.ReservationAdminIdVo;
+import com.genetechies.ecust_meeting_room.pojo.*;
 import com.genetechies.ecust_meeting_room.service.MeetingRoomService;
 import com.genetechies.ecust_meeting_room.service.NotificationService;
 import com.genetechies.ecust_meeting_room.service.ReservationService;
@@ -61,7 +59,7 @@ public class ReservationsController {
     }
 
 
-    @ApiOperation(value = "get reservation info by admin id",notes = "param: {\"pageSize\":2,\"pageNo\":1}")
+    @ApiOperation(value = "get reservation info by admin id",notes = "param: {\"adminId\":1,\"pageNo\":1,\"pageSize\":2}")
     @RequestMapping(value = "getReservationsByAdminId",method = RequestMethod.POST)
     public ECUSTResponse<PageResponse<Reservation>> getReservationsByAdminId(@RequestBody ReservationAdminIdVo reservationAdminIdVo){
         logger.info("call:/api/reservation/getReservationsByAdminId");
@@ -109,18 +107,40 @@ public class ReservationsController {
     }
 
 
-    @RequestMapping(value = "updateReservationById",method = RequestMethod.POST)
-    public ECUSTResponse<Void> updateReservationById(@RequestBody Reservation reservation){
-        logger.info("call:/api/reservation/updateReservationById");
+    @ApiOperation(value = "update reservation status",notes = "param: {\"reservationId\":1,\"status\":\"approval\",\"startTime\":\"2024-08-18 16:44:00\",\"endTime\":\"2024-08-18 17:44:00\"}")
+    @RequestMapping(value = "updateReservationStatusById",method = RequestMethod.POST)
+    public ECUSTResponse<Void> updateReservationStatusById(@RequestBody Reservation reservation){
+        logger.info("call:/api/reservation/updateReservationStatusById");
         ECUSTResponse<Void> ecustResponse = new ECUSTResponse<>();
         try{
-            reservationsService.updateById(reservation);
+            updateReservationStatus(reservation);
+            if(reservation.getStatus().equals(Status.APPROVAL)){
+                rejectOverlapReservation(reservation);
+            }
+
             ecustResponse.setCode(ECUSTResponse.OK);
         }catch(Exception e) {
             logger.error(e.getMessage(),e);
             throw ECUSTException.instance(e.getMessage(),e);
         }
         return ecustResponse;
+    }
+
+    private void updateReservationStatus(Reservation reservation){
+        UpdateWrapper<Reservation> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.set("status", reservation.getStatus());
+        updateWrapper.eq("reservation_id",reservation.getReservationId());
+        reservationsService.update(updateWrapper);
+
+    }
+
+    private void rejectOverlapReservation(Reservation reservation){
+        UpdateWrapper<Reservation> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.set("status", Status.REFUSAL);
+        updateWrapper.set("room_id",reservation.getRoomId());
+        updateWrapper.not(r -> r.and(g -> g.gt("start_time",reservation.getEndTime()).or().lt("end_time",reservation.getStartTime())))
+                .ne("reservation_id",reservation.getReservationId()).eq("status",Status.PENDING_APPROVAL);
+        reservationsService.update(updateWrapper);
     }
 
     @RequestMapping(value = "removeReservationById",method = RequestMethod.POST)

@@ -34,7 +34,7 @@
         <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
         <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
         <result property="attendees" column="attendees" jdbcType="INTEGER"/>
-        <result property="status" column="status" jdbcType="OTHER"/>
+        <result property="status" column="reservation_status" jdbcType="OTHER"/>
         <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
         <association property="meetingRoom">
             <id property="roomId" column="room_id" jdbcType="INTEGER"/>
@@ -42,13 +42,18 @@
             <result property="capacity" column="capacity" jdbcType="INTEGER"/>
             <result property="equipment" column="equipment" jdbcType="VARCHAR"/>
             <result property="address" column="address" jdbcType="VARCHAR"/>
-            <result property="status" column="status" jdbcType="OTHER"/>
+            <result property="status" column="meetingroom_status" jdbcType="OTHER"/>
             <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
         </association>
     </resultMap>
 
     <sql id="Base_Column_List">
-        m.*,r.*
+        r.reservation_id,r.room_id,r.user_id,
+        r.subject,r.start_time,r.end_time,
+        r.attendees,r.status as reservation_status,r.created_at,
+        m.room_id,m.name,m.capacity,
+        m.equipment,m.address,m.status as meetingroom_status,
+        m.created_at
     </sql>
     <select id="selectReserveMeetingRoom" resultMap="MeetingRoomReservation">
         select
