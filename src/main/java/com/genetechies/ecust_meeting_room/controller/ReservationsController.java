@@ -75,7 +75,7 @@ public class ReservationsController {
         return ecustResponse;
     }
 
-
+    @ApiOperation(value = "create reservation",notes = "param: {\"roomId\":1,\"userId\":1,\"subject\":\"测试\",\"status\":\"pending_approval\",\"startTime\":\"2024-03-12 15:30:00\",\"endTime\":\"2024-03-12 17:30:00\",\"attendees\":6}")
     @RequestMapping(value = "createReservation",method = RequestMethod.POST)
     public ECUSTResponse<Void> createReservation(@RequestBody Reservation reservation){
         logger.info("call:/api/reservation/createReservation");
@@ -102,6 +102,7 @@ public class ReservationsController {
         return roomAdminIds.stream().map(roomAdminId -> {
             Notification notification = new Notification();
             notification.setUserId(roomAdminId);
+            notification.setMessage(Message.NOTIFICATION);
             return notification;
         }).toList();
     }

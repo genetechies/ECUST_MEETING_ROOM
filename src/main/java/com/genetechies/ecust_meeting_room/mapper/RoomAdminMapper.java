@@ -3,6 +3,9 @@ package com.genetechies.ecust_meeting_room.mapper;
 import com.genetechies.ecust_meeting_room.domain.RoomAdmin;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
 * @author 98025
@@ -13,6 +16,8 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface RoomAdminMapper extends BaseMapper<RoomAdmin> {
 
+
+    List<RoomAdmin> getAdminsByRoomId(@Param("roomId") String roomId);
 }
 
 

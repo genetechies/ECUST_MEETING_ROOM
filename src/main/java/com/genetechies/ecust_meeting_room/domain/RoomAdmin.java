@@ -18,6 +18,9 @@ public class RoomAdmin implements Serializable {
 
     private Integer adminId;
 
+    @TableField(exist = false)
+    private List<User> users;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -42,6 +45,14 @@ public class RoomAdmin implements Serializable {
 
     public void setAdminId(Integer adminId) {
         this.adminId = adminId;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     @Override

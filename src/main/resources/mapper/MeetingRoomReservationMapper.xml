@@ -10,7 +10,7 @@
             <result property="capacity" column="capacity" jdbcType="INTEGER"/>
             <result property="equipment" column="equipment" jdbcType="VARCHAR"/>
             <result property="address" column="address" jdbcType="VARCHAR"/>
-            <result property="status" column="status" jdbcType="OTHER"/>
+            <result property="status" column="meetingroom_status" jdbcType="OTHER"/>
             <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
             <collection property="reservationList" ofType="com.genetechies.ecust_meeting_room.domain.Reservation">
                 <id property="reservationId" column="reservation_id" jdbcType="INTEGER"/>
@@ -20,7 +20,7 @@
                 <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
                 <result property="endTime" column="end_time" jdbcType="TIMESTAMP"/>
                 <result property="attendees" column="attendees" jdbcType="INTEGER"/>
-                <result property="status" column="status" jdbcType="OTHER"/>
+                <result property="status" column="reservation_status" jdbcType="OTHER"/>
                 <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
             </collection>
     </resultMap>
@@ -59,7 +59,7 @@
         select
         <include refid="Base_Column_List"/>
         from meeting_room m left JOIN reservation r ON m.room_id=r.room_id
-        where m.room_id = #{roomId} and #{startTime} &lt; r.start_time and r.end_time &lt; #{endTime}
+        where m.room_id = #{roomId} and #{startTime} &lt;= r.start_time and r.end_time &lt;= #{endTime}
     </select>
 
     <select id="selectReserveMeetingRoomByAdminId" resultMap="ReservationMeetingRoom">

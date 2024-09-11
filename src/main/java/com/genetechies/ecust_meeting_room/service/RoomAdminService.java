@@ -2,6 +2,9 @@ package com.genetechies.ecust_meeting_room.service;
 
 import com.genetechies.ecust_meeting_room.domain.RoomAdmin;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
 * @author 98025
@@ -10,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface RoomAdminService extends IService<RoomAdmin> {
 
+    List<RoomAdmin> getAdminsByRoomId(String roomId);
 }

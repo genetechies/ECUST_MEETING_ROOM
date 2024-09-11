@@ -4,13 +4,33 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.genetechies.ecust_meeting_room.mapper.RoomAdminMapper">
 
-    <resultMap id="BaseResultMap" type="com.genetechies.ecust_meeting_room.domain.RoomAdmin">
+    <resultMap id="roomAdmins" type="com.genetechies.ecust_meeting_room.domain.RoomAdmin">
             <id property="id" column="id" jdbcType="INTEGER"/>
             <result property="roomId" column="room_id" jdbcType="INTEGER"/>
             <result property="adminId" column="admin_id" jdbcType="INTEGER"/>
+        <collection property="users" ofType="com.genetechies.ecust_meeting_room.domain.User">
+            <id property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="username" column="username" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="employeeId" column="employee_id" jdbcType="VARCHAR"/>
+            <result property="phone" column="phone" jdbcType="VARCHAR"/>
+            <result property="role" column="role" jdbcType="OTHER"/>
+            <result property="status" column="status" jdbcType="OTHER"/>
+            <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+        </collection>
     </resultMap>
 
-    <sql id="Base_Column_List">
-        id,room_id,admin_id
+
+    <sql id="admin">
+        r.id,r.room_id,r.admin_id,u.user_id,u.username,
+        u.name,u.employee_id,u.phone,
+        u.role,u.status,u.created_at
     </sql>
+
+    <select id="getAdminsByRoomId" resultMap="roomAdmins">
+        select
+        <include refid="admin"/>
+        FROM room_admin r LEFT JOIN user u ON r.admin_id = u.user_id
+        WHERE r.room_id = #{roomId}
+    </select>
 </mapper>
