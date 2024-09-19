@@ -18,6 +18,8 @@ public interface RoomAdminMapper extends BaseMapper<RoomAdmin> {
 
 
     List<RoomAdmin> getAdminsByRoomId(@Param("roomId") String roomId);
+
+    List<RoomAdmin> getAllRoomsOwnedByAdminId(@Param("adminId") String adminId);
 }
 
 

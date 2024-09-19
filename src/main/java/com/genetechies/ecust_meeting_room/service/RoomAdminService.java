@@ -14,4 +14,6 @@ import java.util.List;
 public interface RoomAdminService extends IService<RoomAdmin> {
 
     List<RoomAdmin> getAdminsByRoomId(String roomId);
+
+    List<RoomAdmin> getAllRoomsOwnedByAdminId(String adminId);
 }

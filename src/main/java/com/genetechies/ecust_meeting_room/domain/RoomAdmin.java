@@ -12,6 +12,8 @@ import java.util.List;
  */
 @TableName(value ="room_admin")
 public class RoomAdmin implements Serializable {
+
+    @TableId(type = IdType.AUTO)
     private Integer id;
 
     private Integer roomId;
@@ -20,6 +22,9 @@ public class RoomAdmin implements Serializable {
 
     @TableField(exist = false)
     private List<User> users;
+
+    @TableField(exist = false)
+    private List<MeetingRoom> meetingRooms;
 
     private static final long serialVersionUID = 1L;
 
@@ -53,6 +58,15 @@ public class RoomAdmin implements Serializable {
 
     public void setUsers(List<User> users) {
         this.users = users;
+    }
+
+
+    public List<MeetingRoom> getMeetingRooms() {
+        return meetingRooms;
+    }
+
+    public void setMeetingRooms(List<MeetingRoom> meetingRooms) {
+        this.meetingRooms = meetingRooms;
     }
 
     @Override

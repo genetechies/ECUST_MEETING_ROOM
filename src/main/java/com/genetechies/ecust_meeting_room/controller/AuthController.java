@@ -1,6 +1,8 @@
 package com.genetechies.ecust_meeting_room.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.genetechies.ecust_meeting_room.domain.User;
+import com.genetechies.ecust_meeting_room.pojo.ECUSTException;
 import com.genetechies.ecust_meeting_room.pojo.ECUSTResponse;
 import com.genetechies.ecust_meeting_room.pojo.LoginResponse;
 import com.genetechies.ecust_meeting_room.service.UserService;
@@ -13,10 +15,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -42,7 +41,7 @@ public class AuthController {
         User user = userService.getUserByUsername(userVo.getUsername());
 
         if(user != null){
-           ecustResponse.setCode(ECUSTResponse.OK);
+           ecustResponse.setCode(ECUSTResponse.ERROR);
            ecustResponse.setMessage("user has already been existed");
            return ecustResponse;
         }
@@ -63,6 +62,27 @@ public class AuthController {
         loginResponse.setToken(jwtUtil.generateToken(authentication));
         ecustResponse.setData(loginResponse);
         ecustResponse.setMessage("login successfully");
+        return ecustResponse;
+    }
+
+    @RequestMapping(value = "isUsernameExist",method = RequestMethod.GET)
+    public ECUSTResponse<Boolean> isUsernameExist(@RequestParam String username){
+        logger.info("call:/api/user/isUsernameExist");
+        ECUSTResponse<Boolean> ecustResponse = new ECUSTResponse<>();
+        try{
+            QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("username",username);
+            long value = userService.count(queryWrapper);
+            if(value < 1){
+                ecustResponse.setData(false);
+            }else {
+                ecustResponse.setData(true);
+            }
+            ecustResponse.setCode(ECUSTResponse.OK);
+        }catch(Exception e) {
+            logger.error(e.getMessage(),e);
+            throw ECUSTException.instance(e.getMessage(),e);
+        }
         return ecustResponse;
     }
 

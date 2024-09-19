@@ -25,6 +25,11 @@ public class RoomAdminServiceImpl extends ServiceImpl<RoomAdminMapper, RoomAdmin
     public List<RoomAdmin> getAdminsByRoomId(String roomId) {
         return roomAdminMapper.getAdminsByRoomId(roomId);
     }
+
+    @Override
+    public List<RoomAdmin> getAllRoomsOwnedByAdminId(String adminId) {
+        return roomAdminMapper.getAllRoomsOwnedByAdminId(adminId);
+    }
 }
 
 

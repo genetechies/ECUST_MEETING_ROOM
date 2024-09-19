@@ -118,7 +118,6 @@ public class ReservationsController {
             if(reservation.getStatus().equals(Status.APPROVAL)){
                 rejectOverlapReservation(reservation);
             }
-
             ecustResponse.setCode(ECUSTResponse.OK);
         }catch(Exception e) {
             logger.error(e.getMessage(),e);
@@ -138,9 +137,12 @@ public class ReservationsController {
     private void rejectOverlapReservation(Reservation reservation){
         UpdateWrapper<Reservation> updateWrapper = new UpdateWrapper<>();
         updateWrapper.set("status", Status.REFUSAL);
-        updateWrapper.set("room_id",reservation.getRoomId());
-        updateWrapper.not(r -> r.and(g -> g.gt("start_time",reservation.getEndTime()).or().lt("end_time",reservation.getStartTime())))
-                .ne("reservation_id",reservation.getReservationId()).eq("status",Status.PENDING_APPROVAL);
+        updateWrapper.or(r->r.lt("start_time",reservation.getStartTime()).gt("end_time",reservation.getEndTime()))
+                .or(r-> r.gt("start_time",reservation.getStartTime()).lt("start_time",reservation.getEndTime()))
+                .or(r->r.gt("end_time",reservation.getStartTime()).lt("end_time",reservation.getEndTime()))
+                .or(r->r.lt("start_time",reservation.getStartTime()).lt("end_time",reservation.getEndTime()))
+                .ne("reservation_id",reservation.getReservationId()).eq("status",Status.PENDING_APPROVAL)
+                .eq("room_id",reservation.getRoomId());
         reservationsService.update(updateWrapper);
     }
 

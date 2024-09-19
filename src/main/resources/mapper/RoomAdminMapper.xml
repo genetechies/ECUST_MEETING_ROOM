@@ -20,17 +20,46 @@
         </collection>
     </resultMap>
 
+    <resultMap id="meetingRoomByAdminId" type="com.genetechies.ecust_meeting_room.domain.RoomAdmin">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="roomId" column="room_id" jdbcType="INTEGER"/>
+        <result property="adminId" column="admin_id" jdbcType="INTEGER"/>
+        <collection property="meetingRooms" ofType="com.genetechies.ecust_meeting_room.domain.MeetingRoom">
+            <id property="roomId" column="room_id" jdbcType="INTEGER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="capacity" column="capacity" jdbcType="INTEGER"/>
+            <result property="equipment" column="equipment" jdbcType="VARCHAR"/>
+            <result property="address" column="address" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="OTHER"/>
+            <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
+        </collection>
+    </resultMap>
 
-    <sql id="admin">
+
+    <sql id="adminInfo">
         r.id,r.room_id,r.admin_id,u.user_id,u.username,
         u.name,u.employee_id,u.phone,
         u.role,u.status,u.created_at
     </sql>
 
+    <sql id="meetingRoom">
+        r.id,r.room_id,r.admin_id,
+        m.room_id,m.name,m.capacity,
+        m.equipment,m.address,m.status,
+        m.created_at
+    </sql>
+
     <select id="getAdminsByRoomId" resultMap="roomAdmins">
         select
-        <include refid="admin"/>
+        <include refid="adminInfo"/>
         FROM room_admin r LEFT JOIN user u ON r.admin_id = u.user_id
         WHERE r.room_id = #{roomId}
+    </select>
+
+    <select id="getAllRoomsOwnedByAdminId" resultMap="meetingRoomByAdminId">
+        SELECT
+        <include refid="meetingRoom"/>
+        FROM room_admin r LEFT JOIN meeting_room m ON r.room_id=m.room_id
+        WHERE r.admin_id=#{adminId}
     </select>
 </mapper>

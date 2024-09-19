@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.genetechies.ecust_meeting_room.domain.MeetingRoom;
+import com.genetechies.ecust_meeting_room.domain.User;
 import com.genetechies.ecust_meeting_room.pojo.*;
 import com.genetechies.ecust_meeting_room.service.MeetingRoomService;
 import com.genetechies.ecust_meeting_room.service.impl.MeetingRoomReservationServiceImpl;
@@ -39,6 +40,27 @@ public class MeetingRoomController {
 
             IPage<MeetingRoom> meetingRoomIPage = meetingRoomService.page(page);
             ecustResponse.setData(new PageResponse<>(meetingRoomIPage.getTotal(),meetingRoomIPage.getPages(),meetingRoomIPage.getSize(),meetingRoomIPage.getCurrent(),meetingRoomIPage.getRecords()));
+            ecustResponse.setCode(ECUSTResponse.OK);
+        }catch(Exception e) {
+            logger.error(e.getMessage(),e);
+            throw ECUSTException.instance(e.getMessage(),e);
+        }
+        return ecustResponse;
+    }
+
+    @RequestMapping(value = "isMeetingRoomExist",method = RequestMethod.GET)
+    public ECUSTResponse<Boolean> isUsernameExist(@RequestParam String name){
+        logger.info("call:/api/meetingRooms/isMeetingRoomExist");
+        ECUSTResponse<Boolean> ecustResponse = new ECUSTResponse<>();
+        try{
+            QueryWrapper<MeetingRoom> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("name",name);
+            long value = meetingRoomService.count(queryWrapper);
+            if(value < 1){
+                ecustResponse.setData(false);
+            }else {
+                ecustResponse.setData(true);
+            }
             ecustResponse.setCode(ECUSTResponse.OK);
         }catch(Exception e) {
             logger.error(e.getMessage(),e);

@@ -20,7 +20,7 @@ public class RoleAdminController {
     @Autowired
     private RoomAdminService roomAdminService;
 
-    @RequestMapping(value = "getUserInfoByRoomId",method = RequestMethod.GET)
+    @RequestMapping(value = "getAdminInfoByRoomId",method = RequestMethod.GET)
     public ECUSTResponse<List<RoomAdmin>> getUserInfoByRoomId(@RequestParam String roomId){
         logger.info("call:/api/roleadmin/getAllRoomAdmin");
         ECUSTResponse<List<RoomAdmin>> ecustResponse = new ECUSTResponse<>();
@@ -36,12 +36,12 @@ public class RoleAdminController {
     }
 
 
-    @RequestMapping(value = "getAllRoomAdmin",method = RequestMethod.GET)
-    public ECUSTResponse<List<RoomAdmin>> getAllRoomAdmin(){
-        logger.info("call:/api/roleadmin/getAllRoomAdmin");
+    @RequestMapping(value = "getAllRoomsOwnedByAdminId",method = RequestMethod.GET)
+    public ECUSTResponse<List<RoomAdmin>> getAllRoomsOwnedByAdminId(@RequestParam String adminId){
+        logger.info("call:/api/roleadmin/getAllRoomsOwnedByAdminId");
         ECUSTResponse<List<RoomAdmin>> ecustResponse = new ECUSTResponse<>();
         try{
-            List<RoomAdmin> roomAdmins = roomAdminService.list();
+            List<RoomAdmin> roomAdmins = roomAdminService.getAllRoomsOwnedByAdminId(adminId);
             ecustResponse.setData(roomAdmins);
             ecustResponse.setCode(ECUSTResponse.OK);
         }catch(Exception e) {
