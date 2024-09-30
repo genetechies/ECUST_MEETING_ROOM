@@ -94,6 +94,24 @@ public class UserController {
         return ecustResponse;
     }
 
+    @ApiOperation(value = "reset user password with default value",notes = "param: ")
+    @RequestMapping(value = "resettingPasswordByAdmin",method = RequestMethod.POST)
+    public ECUSTResponse<Void> resettingPasswordByAdmin(@RequestBody ResettingPasswordVo resettingPasswordVo){
+        logger.info("call:/api/user/resettingPasswordByAdmin");
+        ECUSTResponse<Void> ecustResponse = new ECUSTResponse<>();
+        try{
+            UpdateWrapper<User> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("user_id",resettingPasswordVo.getUserId()).set("password",passwordEncoder.encode("888888")).set("resetting",Boolean.FALSE);
+            userService.update(updateWrapper);
+            ecustResponse.setCode(ECUSTResponse.OK);
+            ecustResponse.setMessage("reset password successfully");
+        }catch(Exception e) {
+            logger.error(e.getMessage(),e);
+            throw ECUSTException.instance(e.getMessage(),e);
+        }
+        return ecustResponse;
+    }
+
     @ApiOperation(value = "chang password for user",notes = "{\"passowrd\":\"1234\"}")
     @RequestMapping(value = "changPasswordByUser",method = RequestMethod.POST)
     public ECUSTResponse<PageResponse<Void>> changPasswordByUser(@RequestBody PasswordVo passwordVo){
