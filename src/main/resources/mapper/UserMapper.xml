@@ -13,13 +13,14 @@
             <result property="phone" column="phone" jdbcType="VARCHAR"/>
             <result property="role" column="role" jdbcType="OTHER"/>
             <result property="status" column="status" jdbcType="OTHER"/>
+            <result property="resetting" column="resetting" jdbcType="BOOLEAN" />
             <result property="createdAt" column="created_at" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         user_id,username,password,
         name,employee_id,phone,
-        role,status,created_at
+        role,status,resetting,created_at
     </sql>
     <select id="findOneByUsername" resultMap="BaseResultMap">
         select

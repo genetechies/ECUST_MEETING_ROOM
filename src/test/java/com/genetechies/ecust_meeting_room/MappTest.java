@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.commons.annotation.Testable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,5 +26,11 @@ public class MappTest {
         LocalDateTime endTime = LocalDateTime.of(2024,8,18,17,43);
         IPage<MeetingRoom> meetingRoomList = meetingRoomReservationMapper.selectReserveMeetingRoom(page,1,startTime,endTime);
         System.out.println(meetingRoomList.getRecords());
+    }
+
+    @Test
+    public void testPassword(){
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        System.out.println(bCryptPasswordEncoder.encode("Wang971048"));
     }
 }
