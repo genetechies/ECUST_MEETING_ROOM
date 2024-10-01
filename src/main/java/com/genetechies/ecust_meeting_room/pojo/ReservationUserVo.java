@@ -1,19 +1,18 @@
 package com.genetechies.ecust_meeting_room.pojo;
 
-public class ReservationAdminIdVo extends PageQuery{
+public class ReservationUserVo extends PageQuery{
 
-    private Integer adminId;
+    private Integer userId;
 
     private String status;
 
-    public Integer getAdminId() {
-        return adminId;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setAdminId(Integer adminId) {
-        this.adminId = adminId;
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
-
 
     public String getStatus() {
         return status;

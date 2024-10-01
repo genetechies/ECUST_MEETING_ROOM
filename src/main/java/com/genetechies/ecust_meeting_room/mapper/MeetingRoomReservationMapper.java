@@ -16,6 +16,6 @@ public interface MeetingRoomReservationMapper extends BaseMapper<MeetingRoom> {
 
     IPage<MeetingRoom> selectReserveMeetingRoom(IPage<MeetingRoom> page,@Param("roomId") Integer roomId, @Param("startTime") LocalDateTime startTime, @Param("endTime") LocalDateTime endTime);
 
-    IPage<Reservation> selectReserveMeetingRoomByAdminId(IPage<Reservation> page, @Param("adminId") Integer adminId);
+    IPage<Reservation> selectReserveMeetingRoomByAdminId(IPage<Reservation> page, @Param("adminId") Integer adminId, @Param("status") String status);
 
 }

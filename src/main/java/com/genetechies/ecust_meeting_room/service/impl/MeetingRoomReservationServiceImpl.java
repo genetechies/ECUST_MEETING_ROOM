@@ -39,7 +39,7 @@ public class MeetingRoomReservationServiceImpl extends ServiceImpl<MeetingRoomRe
     @Override
     public IPage<Reservation> selectReserveMeetingRoomByAdminId(ReservationAdminIdVo reservationAdminIdVo) {
         IPage<Reservation> page = new Page<>(reservationAdminIdVo.getPageNo(),reservationAdminIdVo.getPageSize());
-        return meetingRoomReservationMapper.selectReserveMeetingRoomByAdminId(page,reservationAdminIdVo.getAdminId());
+        return meetingRoomReservationMapper.selectReserveMeetingRoomByAdminId(page,reservationAdminIdVo.getAdminId(),reservationAdminIdVo.getStatus());
     }
 }
 

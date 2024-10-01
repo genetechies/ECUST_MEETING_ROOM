@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.Query;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.genetechies.ecust_meeting_room.domain.MeetingRoom;
 import com.genetechies.ecust_meeting_room.domain.Notification;
 import com.genetechies.ecust_meeting_room.domain.Reservation;
@@ -41,15 +42,19 @@ public class ReservationsController {
     @Autowired
     private NotificationService notificationService;
 
-    @RequestMapping(value = "getReservationsByUserId",method = RequestMethod.GET)
-    public ECUSTResponse<List<Reservation>> getReservationsByUserId(@RequestParam(value = "userId") String userId){
+    @ApiOperation(value = "get reservation info by admin id",notes = "param: {\"adminId\":1,\"pageNo\":1,\"pageSize\":2}")
+    @RequestMapping(value = "getReservationsByUserId",method = RequestMethod.POST)
+    public ECUSTResponse<PageResponse<Reservation>> getReservationsByUserId(@RequestBody ReservationUserVo reservationUserVo){
         logger.info("call:/api/reservation/getReservationsByUserId");
-        ECUSTResponse<List<Reservation>> ecustResponse = new ECUSTResponse<>();
+        ECUSTResponse<PageResponse<Reservation>> ecustResponse = new ECUSTResponse<>();
         try{
+            IPage<Reservation> page = new Page<>(reservationUserVo.getPageNo(), reservationUserVo.getPageSize());
+
             QueryWrapper<Reservation> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("user_id",userId);
-            List<Reservation> reservations = reservationsService.list(queryWrapper);
-            ecustResponse.setData(reservations);
+            queryWrapper.eq("user_id",reservationUserVo.getUserId());
+            queryWrapper.eq("status",reservationUserVo.getStatus());
+            IPage<Reservation> reservationIPage = reservationsService.page(page,queryWrapper);
+            ecustResponse.setData(new PageResponse<>(reservationIPage.getTotal(),reservationIPage.getPages(),reservationIPage.getSize(),reservationIPage.getCurrent(),reservationIPage.getRecords()));
             ecustResponse.setCode(ECUSTResponse.OK);
         }catch(Exception e) {
             logger.error(e.getMessage(),e);
@@ -66,6 +71,26 @@ public class ReservationsController {
         ECUSTResponse<PageResponse<Reservation>> ecustResponse = new ECUSTResponse<>();
         try{
             IPage<Reservation>  reservationIPage= meetingRoomReservationService.selectReserveMeetingRoomByAdminId(reservationAdminIdVo);
+            ecustResponse.setData(new PageResponse<>(reservationIPage.getTotal(),reservationIPage.getPages(),reservationIPage.getSize(),reservationIPage.getCurrent(),reservationIPage.getRecords()));
+            ecustResponse.setCode(ECUSTResponse.OK);
+        }catch(Exception e) {
+            logger.error(e.getMessage(),e);
+            throw ECUSTException.instance(e.getMessage(),e);
+        }
+        return ecustResponse;
+    }
+
+    @ApiOperation(value = "get all waited reservation ",notes = "param: {\"pageNo\":1,\"pageSize\":5,\"status\":\"approval\"}")
+    @RequestMapping(value = "getAllReservation",method = RequestMethod.POST)
+    public ECUSTResponse<PageResponse<Reservation>> getAllReservation(@RequestBody ReservationVo reservationVo){
+        logger.info("call:/api/reservation/getAllReservation");
+        ECUSTResponse<PageResponse<Reservation>> ecustResponse = new ECUSTResponse<>();
+        try{
+            IPage<Reservation> page = new Page<>(reservationVo.getPageNo(), reservationVo.getPageSize());
+            QueryWrapper<Reservation> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("status",reservationVo.getStatus());
+
+            IPage<Reservation>  reservationIPage= reservationsService.page(page,queryWrapper);
             ecustResponse.setData(new PageResponse<>(reservationIPage.getTotal(),reservationIPage.getPages(),reservationIPage.getSize(),reservationIPage.getCurrent(),reservationIPage.getRecords()));
             ecustResponse.setCode(ECUSTResponse.OK);
         }catch(Exception e) {

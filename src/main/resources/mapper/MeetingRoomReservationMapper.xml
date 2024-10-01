@@ -66,7 +66,7 @@
         select
         <include refid="Base_Column_List"/>
         FROM room_admin a LEFT JOIN meeting_room m ON a.room_id=m.room_id
-        left JOIN reservation r ON m.room_id=r.room_id WHERE a.admin_id=#{adminId}
+        left JOIN reservation r ON m.room_id=r.room_id WHERE a.admin_id=#{adminId} and r.status=#{status}
     </select>
 </mapper>
 
