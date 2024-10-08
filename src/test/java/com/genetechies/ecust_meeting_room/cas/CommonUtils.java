@@ -12,8 +12,6 @@ public class CommonUtils {
     public void testConstruct(){
         String casServerLoginUrl= "https://sso.ecust.edu.cn/authserver/login";
 
-
-        String urlToRedirectTo = CommonUtils.constructRedirectUrl(casServerLoginUrl, getServiceParameterName(), modifiedServiceUrl, this.renew, this.gateway);
     }
 
     public String getServiceParameterName(){

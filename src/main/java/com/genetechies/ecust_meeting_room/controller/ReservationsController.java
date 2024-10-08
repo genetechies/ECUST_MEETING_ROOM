@@ -42,7 +42,7 @@ public class ReservationsController {
     @Autowired
     private NotificationService notificationService;
 
-    @ApiOperation(value = "get reservation info by admin id",notes = "param: {\"adminId\":1,\"pageNo\":1,\"pageSize\":2}")
+    @ApiOperation(value = "get reservation info by admin id",notes = "param: {\"pageNo\":1,\"pageSize\":5,\"userId\":6,\"status\":\"approval\"}")
     @RequestMapping(value = "getReservationsByUserId",method = RequestMethod.POST)
     public ECUSTResponse<PageResponse<Reservation>> getReservationsByUserId(@RequestBody ReservationUserVo reservationUserVo){
         logger.info("call:/api/reservation/getReservationsByUserId");
@@ -55,6 +55,27 @@ public class ReservationsController {
             queryWrapper.eq("status",reservationUserVo.getStatus());
             IPage<Reservation> reservationIPage = reservationsService.page(page,queryWrapper);
             ecustResponse.setData(new PageResponse<>(reservationIPage.getTotal(),reservationIPage.getPages(),reservationIPage.getSize(),reservationIPage.getCurrent(),reservationIPage.getRecords()));
+            ecustResponse.setCode(ECUSTResponse.OK);
+        }catch(Exception e) {
+            logger.error(e.getMessage(),e);
+            throw ECUSTException.instance(e.getMessage(),e);
+        }
+        return ecustResponse;
+    }
+
+    @ApiOperation(value = "get reservation info ",notes = "param: {\"userId\":1,\"startTime\":\"2024-08-30 08:30:00\",\"endTime\":\"2024-08-30 18:30:00\",\"status\":\"approval\"}")
+    @RequestMapping(value = "getReservationsByUserIdAndDateRangeAndStatus",method = RequestMethod.POST)
+    public ECUSTResponse<List<Reservation>> getReservationsByUserIdAndDateRangeAndStatus(@RequestBody ReservationUserDataRangeStatusVo reservationUserDataRangeStatusVo){
+        logger.info("call:/api/reservation/getReservationsByUserIdAndDateRangeAndStatus");
+        ECUSTResponse<List<Reservation>> ecustResponse = new ECUSTResponse<>();
+        try{
+            QueryWrapper<Reservation> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("user_id",reservationUserDataRangeStatusVo.getUserId());
+            queryWrapper.eq("status",reservationUserDataRangeStatusVo.getStatus());
+            queryWrapper.ge("start_time",reservationUserDataRangeStatusVo.getStartTime());
+            queryWrapper.le("end_time",reservationUserDataRangeStatusVo.getEndTime());
+            List<Reservation> reservationList = reservationsService.list(queryWrapper);
+            ecustResponse.setData(reservationList);
             ecustResponse.setCode(ECUSTResponse.OK);
         }catch(Exception e) {
             logger.error(e.getMessage(),e);
