@@ -5,15 +5,9 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.genetechies.ecust_meeting_room.domain.MeetingRoom;
-import com.genetechies.ecust_meeting_room.domain.Notification;
-import com.genetechies.ecust_meeting_room.domain.Reservation;
-import com.genetechies.ecust_meeting_room.domain.RoomAdmin;
+import com.genetechies.ecust_meeting_room.domain.*;
 import com.genetechies.ecust_meeting_room.pojo.*;
-import com.genetechies.ecust_meeting_room.service.MeetingRoomService;
-import com.genetechies.ecust_meeting_room.service.NotificationService;
-import com.genetechies.ecust_meeting_room.service.ReservationService;
-import com.genetechies.ecust_meeting_room.service.RoomAdminService;
+import com.genetechies.ecust_meeting_room.service.*;
 import com.genetechies.ecust_meeting_room.service.impl.MeetingRoomReservationServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -42,6 +36,9 @@ public class ReservationsController {
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    private UserService userService;
+
     @ApiOperation(value = "get reservation info by admin id",notes = "param: {\"pageNo\":1,\"pageSize\":5,\"userId\":6,\"status\":\"approval\"}")
     @RequestMapping(value = "getReservationsByUserId",method = RequestMethod.POST)
     public ECUSTResponse<PageResponse<Reservation>> getReservationsByUserId(@RequestBody ReservationUserVo reservationUserVo){
@@ -69,8 +66,11 @@ public class ReservationsController {
         logger.info("call:/api/reservation/getReservationsByUserIdAndDateRangeAndStatus");
         ECUSTResponse<List<Reservation>> ecustResponse = new ECUSTResponse<>();
         try{
+            User user = userService.getById(reservationUserDataRangeStatusVo.getUserId());
             QueryWrapper<Reservation> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("user_id",reservationUserDataRangeStatusVo.getUserId());
+            if(!user.getRole().equals(Constants.SYS_ADMIN)){
+                queryWrapper.eq("user_id",reservationUserDataRangeStatusVo.getUserId());
+            }
             queryWrapper.eq("status",reservationUserDataRangeStatusVo.getStatus());
             queryWrapper.ge("start_time",reservationUserDataRangeStatusVo.getStartTime());
             queryWrapper.le("end_time",reservationUserDataRangeStatusVo.getEndTime());

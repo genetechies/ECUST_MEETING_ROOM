@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.annotation.Resource;
@@ -35,6 +36,11 @@ public class WebSecrurityConfig{
     }
 
     @Bean
+    public ECUSTAuthFilter ECUSTAuthFilter(){
+        return new ECUSTAuthFilter();
+    }
+
+    @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
@@ -51,11 +57,12 @@ public class WebSecrurityConfig{
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/auth/**"
-                ,"/swagger-ui.html", "/v2/api-docs", "/swagger-resources/**", "/webjars/**").permitAll()
+                ,"/swagger-ui.html", "/v2/api-docs", "/swagger-resources/**", "/webjars/**","/404").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(ECUSTAuthFilter(), JWTAuthenticationFilter.class);
         return http.build();
     }
 }

@@ -21,8 +21,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     private UserMapper userMapper;
 
     @Override
-    public void register(User user) {
-        userMapper.insert(user);
+    public int register(User user) {
+        return userMapper.insert(user);
     }
 
     @Override

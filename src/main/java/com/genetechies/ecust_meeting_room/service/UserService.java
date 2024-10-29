@@ -9,7 +9,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2024-08-20 20:59:00
 */
 public interface UserService extends IService<User> {
-    void register(User user);
+    int register(User user);
 
     User getUserByUsername(String username);
 }

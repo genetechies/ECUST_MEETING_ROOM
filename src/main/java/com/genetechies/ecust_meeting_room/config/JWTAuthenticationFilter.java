@@ -25,7 +25,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = getTokenFromRequest(request);
-        if(token != null && jwtUtil.validateToken(token)){
+        if(token != null && isSkipOver(request) && jwtUtil.validateToken(token)){
             String username = jwtUtil.getUsernameFromToken(token);
             UserDetails userDetails =  userDetailsService.loadUserByUsername(username);
             UsernamePasswordAuthenticationToken authentication =
@@ -44,5 +44,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    private boolean isSkipOver(HttpServletRequest httpServletRequest) {
+        return !Boolean.parseBoolean(httpServletRequest.getHeader("ECUSTAUTH"));
     }
 }

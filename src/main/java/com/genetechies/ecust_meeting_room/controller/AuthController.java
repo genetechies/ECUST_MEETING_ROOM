@@ -42,9 +42,9 @@ public class AuthController {
     private JwtUtil jwtUtil;
 
     @RequestMapping(value = "register",method = RequestMethod.POST)
-    public ECUSTResponse<String> register(@RequestBody User userVo){
+    public ECUSTResponse<Integer> register(@RequestBody User userVo){
         logger.info("call:/api/auth/register");
-        ECUSTResponse<String> ecustResponse = new ECUSTResponse<>();
+        ECUSTResponse<Integer> ecustResponse = new ECUSTResponse<>();
         User user = userService.getUserByUsername(userVo.getUsername());
 
         if(user != null){
@@ -53,7 +53,8 @@ public class AuthController {
            return ecustResponse;
         }
         userVo.setPassword(passwordEncoder.encode(userVo.getPassword()));
-        userService.register(userVo);
+        Integer userId = userService.register(userVo);
+        ecustResponse.setData(userId);
         ecustResponse.setCode(ECUSTResponse.OK);
         ecustResponse.setMessage("user register successfully");
         return ecustResponse;
